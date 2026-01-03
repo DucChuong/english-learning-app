@@ -1,0 +1,149 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String    // Hashed
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  progress      UserProgress[]
+  sentences     SavedSentence[]
+  streakDays    Int       @default(0)
+  lastStudyDate DateTime?
+  totalPoints   Int       @default(0)
+  
+  @@map("users")
+}
+
+model Vocabulary {
+  id          String   @id @default(cuid())
+  word        String   @unique
+  meaning     String
+  meaningVi   String   // Nghĩa tiếng Việt
+  example     String
+  exampleVi   String   // Ví dụ tiếng Việt
+  phonetic    String?  // /rɪˈɡɑːrdɪŋ/
+  audioUrl    String?
+  topic       Topic    @relation(fields: [topicId], references: [id])
+  topicId     String
+  level       Level    @default(BEGINNER)
+  order       Int      // Thứ tự học (Day 1, Day 2...)
+  createdAt   DateTime @default(now())
+  
+  progress    UserProgress[]
+  exercises   Exercise[]
+  
+  @@index([topicId])
+  @@index([level])
+  @@map("vocabularies")
+}
+
+model Topic {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  nameVi      String       // Tên tiếng Việt
+  description String?
+  icon        String?      // Emoji or icon name
+  order       Int          // Week 1, Week 2...
+  
+  vocabularies Vocabulary[]
+  sentences    SavedSentence[]
+  
+  @@map("topics")
+}
+
+model UserProgress {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  vocabulary      Vocabulary  @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  vocabularyId    String
+  
+  status          ProgressStatus @default(NEW)
+  correctCount    Int         @default(0)
+  incorrectCount  Int         @default(0)
+  lastReviewed    DateTime?
+  nextReview      DateTime?   // Spaced repetition
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@unique([userId, vocabularyId])
+  @@index([userId, status])
+  @@index([nextReview])
+  @@map("user_progress")
+}
+
+model Exercise {
+  id              String      @id @default(cuid())
+  vocabulary      Vocabulary  @relation(fields: [vocabularyId], references: [id], onDelete: Cascade)
+  vocabularyId    String
+  
+  type            ExerciseType
+  question        String
+  questionVi      String?
+  options         String[]    // JSON array for multiple choice
+  correctAnswer   String
+  explanation     String?
+  
+  @@index([vocabularyId])
+  @@map("exercises")
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ProgressStatus {
+  NEW
+  LEARNING
+  REVIEWING
+  MASTERED
+}
+
+enum ExerciseType {
+  MULTIPLE_CHOICE
+  FILL_BLANK
+  MATCHING
+  LISTENING
+  SENTENCE_BUILD
+}
+
+model SavedSentence {
+  id          String   @id @default(cuid())
+  sentence    String   // The sentence text
+  translation String?  // Vietnamese translation
+  topic       Topic    @relation(fields: [topicId], references: [id])
+  topicId     String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  highlightedWords String[] // Array of word IDs that are highlighted
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([topicId])
+  @@map("saved_sentences")
+}
+
+model DailyRecommendations {
+  id            String   @id @default(cuid())
+  date          String   @unique // Date string in YYYY-MM-DD format
+  recommendations Json   // Array of RecommendedWord objects
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("daily_recommendations")
+}
