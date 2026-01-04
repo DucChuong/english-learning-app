@@ -25,7 +25,8 @@ export async function getRecommendedWords(
     learning: number;
     totalWords: number;
   },
-  learnedWords: string[] = []
+  learnedWords: string[] = [],
+  ieltsLevel?: number
 ): Promise<RecommendedWord[]> {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
@@ -33,15 +34,20 @@ export async function getRecommendedWords(
     throw new Error('OPENROUTER_API_KEY is not configured');
   }
 
+  const levelDescription = ieltsLevel 
+    ? `The user's IELTS level is ${ieltsLevel}. Recommend words appropriate for IELTS ${ieltsLevel} level.`
+    : 'Recommend words appropriate for intermediate level learners.';
+
   const messages: OpenRouterMessage[] = [
     {
       role: 'system',
-      content: `You are an English vocabulary learning assistant. Recommend 5 new English words for a learner based on their progress.
+      content: `You are an English vocabulary learning assistant. Recommend 5 new English words for a learner based on their progress and IELTS level.
       
 User's current progress:
 - Total words learned: ${userProgress.totalWords}
 - Words mastered: ${userProgress.mastered}
 - Words currently learning: ${userProgress.learning}
+${levelDescription}
 
 Already learned words (avoid these): ${learnedWords.join(', ') || 'none'}
 
@@ -52,8 +58,14 @@ For each recommended word, provide:
 4. An example sentence in English
 5. Example sentence translation in Vietnamese (exampleVi)
 6. Phonetic pronunciation (IPA format, optional)
-7. Difficulty level (BEGINNER, INTERMEDIATE, or ADVANCED)
+7. Difficulty level (BEGINNER, INTERMEDIATE, or ADVANCED) - should match the IELTS level
 8. Suggested topic category (e.g., "Daily Life", "Business", "Technology", etc.)
+
+${ieltsLevel ? `Word difficulty mapping:
+- IELTS 4.0-5.0: Use BEGINNER level words
+- IELTS 5.5-6.5: Use INTERMEDIATE level words  
+- IELTS 7.0-8.0: Use ADVANCED level words
+- IELTS 8.5+: Use ADVANCED level words with academic vocabulary` : ''}
 
 Return ONLY a valid JSON array with this exact structure:
 [
@@ -69,7 +81,7 @@ Return ONLY a valid JSON array with this exact structure:
   }
 ]
 
-Make sure the words are appropriate for the user's level and not too easy or too difficult.`,
+Make sure the words are appropriate for the user's IELTS level and will help them progress.`,
     },
     {
       role: 'user',
@@ -162,7 +174,8 @@ export interface GeneratedSentence {
 export async function generateSentenceWithWords(
   topicName: string,
   topicWords: string[] = [],
-  isStory: boolean = true
+  isStory: boolean = true,
+  ieltsLevel?: number
 ): Promise<GeneratedSentence> {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
@@ -174,15 +187,21 @@ export async function generateSentenceWithWords(
     ? 'a longer story-like sentence or short paragraph (>100 words) that tells a mini story or narrative'
     : 'a natural English sentence (10-20 words)';
 
+  const levelDescription = ieltsLevel
+    ? `The user's IELTS level is ${ieltsLevel}. Generate content appropriate for IELTS ${ieltsLevel} level. Use vocabulary and sentence structures that match this level.`
+    : 'Generate content appropriate for intermediate level learners (IELTS 5.5-6.5).';
+
   const messages: OpenRouterMessage[] = [
     {
       role: 'system',
       content: `You are an English learning assistant. Generate ${sentenceType} related to the topic "${topicName}".
 
+${levelDescription}
+
 The ${isStory ? 'story/sentence' : 'sentence'} should:
 1. Be natural and engaging${isStory ? ', like a mini story or narrative' : ''}
 2. Include 4-8 vocabulary words from this topic (if provided): ${topicWords.join(', ') || 'any words related to the topic'}
-3. Be appropriate for English learners 6.5 IELTS level
+3. Use vocabulary and grammar appropriate for the specified IELTS level
 4. Include a Vietnamese translation
 ${isStory ? '5. Tell a complete mini story or narrative that makes sense\n6. Be interesting and engaging to read' : ''}
 

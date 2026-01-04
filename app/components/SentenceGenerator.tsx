@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, RefreshCw, AlertCircle, BookOpen } from 'lucide-react';
 import { SentenceDisplay } from './SentenceDisplay';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
@@ -33,6 +33,15 @@ export function SentenceGenerator({ topics, userId }: SentenceGeneratorProps) {
   const [isStoryMode, setIsStoryMode] = useState<boolean>(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ieltsLevel, setIeltsLevel] = useState<number | null>(null);
+
+  // Fetch user's IELTS level on mount
+  useEffect(() => {
+    fetch('/api/user/level')
+      .then((res) => res.json())
+      .then((data) => setIeltsLevel(data.ieltsLevel))
+      .catch(() => {});
+  }, []);
   const [sentenceData, setSentenceData] = useState<{
     sentence: string;
     translation: string;
@@ -163,6 +172,18 @@ export function SentenceGenerator({ topics, userId }: SentenceGeneratorProps) {
             </SelectContent>
           </Select>
 
+          {/* IELTS Level Display */}
+          {ieltsLevel && (
+            <div className="p-3 border rounded-lg bg-primary/5 border-primary/20">
+              <p className="text-sm font-medium text-primary">
+                📊 Your IELTS Level: {ieltsLevel}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Content will be generated appropriate for your level
+              </p>
+            </div>
+          )}
+
           {/* Story Mode Toggle */}
           <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50">
             <div className="flex-1">
@@ -174,7 +195,7 @@ export function SentenceGenerator({ topics, userId }: SentenceGeneratorProps) {
               </Label>
               <p className="text-sm text-muted-foreground mt-1">
                 {isStoryMode 
-                  ? 'Generate longer story-like sentences (50-100 words) with mini narratives'
+                  ? 'Generate longer story-like sentences (>100 words) with mini narratives'
                   : 'Generate short sentences (10-20 words) for quick learning'}
               </p>
             </div>

@@ -49,6 +49,12 @@ export async function POST(request: Request) {
       );
     }
 
+    // Get user's IELTS level
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+    const userIeltsLevel = (user as any)?.ieltsLevel as number | undefined;
+
     // Get topic words for context
     const topicWords = topic.vocabularies.map((v) => v.word);
 
@@ -56,7 +62,8 @@ export async function POST(request: Request) {
     const generatedSentence = await generateSentenceWithWords(
       topic.name,
       topicWords,
-      isStory
+      isStory,
+      userIeltsLevel
     );
 
     // Match highlighted words with vocabulary in database

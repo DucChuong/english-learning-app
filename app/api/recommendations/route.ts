@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
     // If we have today's recommendations, return them
     if (dailyRec) {
-      const recommendations = dailyRec.recommendations as RecommendedWord[];
+      const recommendations = dailyRec.recommendations as unknown as RecommendedWord[];
       return NextResponse.json({ recommendations }, { status: 200 });
     }
 
@@ -53,6 +53,11 @@ export async function GET(request: Request) {
       },
     });
 
+    // Get all users to calculate average IELTS level
+    const allUsers = await prisma.user.findMany({
+      select: { ieltsLevel: true },
+    });
+
     const uniqueUserCount = new Set(allUsersProgress.map((p) => p.userId)).size;
     
     // Calculate average stats, or use defaults if no users
@@ -72,15 +77,22 @@ export async function GET(request: Request) {
           totalWords: 0,
         };
 
+    // Calculate average IELTS level
+    const usersWithLevel = allUsers.filter((u) => u.ieltsLevel !== null);
+    const avgIeltsLevel = usersWithLevel.length > 0
+      ? usersWithLevel.reduce((sum, u) => sum + (u.ieltsLevel || 0), 0) / usersWithLevel.length
+      : 6.0; // Default to 6.0 if no users have level set
+
     // Get common learned words to avoid (limit to most common ones)
     const allLearnedWords = Array.from(
       new Set(allUsersProgress.map((p) => p.vocabulary.word))
     ).slice(0, 50); // Limit to avoid too long context
 
-    // Generate new recommendations
+    // Generate new recommendations with average IELTS level
     const recommendations = await getRecommendedWords(
       avgStats,
-      allLearnedWords
+      allLearnedWords,
+      Math.round(avgIeltsLevel * 10) / 10 // Round to 1 decimal place
     );
 
     // Save to database for today
