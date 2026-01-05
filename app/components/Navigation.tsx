@@ -25,7 +25,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="text-xl font-bold text-primary flex items-center gap-2">
             <Book className="w-6 h-6" />
-            EnglishApp
+            EngliFun
           </Link>
 
           <div className="hidden md:flex gap-2">
