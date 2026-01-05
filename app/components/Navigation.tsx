@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { Home, BookOpen, BarChart3, Settings, LogOut, FileText } from 'lucide-react';
+import { Home, BookOpen, BarChart3, Settings, LogOut, FileText, Book } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/lib/utils';
 
@@ -23,8 +23,9 @@ export function Navigation() {
     <nav className="bg-background border-b sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-primary">
-            📚 EnglishApp
+          <Link href="/" className="text-xl font-bold text-primary flex items-center gap-2">
+            <Book className="w-6 h-6" />
+            EnglishApp
           </Link>
 
           <div className="hidden md:flex gap-2">

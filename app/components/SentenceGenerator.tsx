@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sparkles, RefreshCw, AlertCircle, BookOpen } from 'lucide-react';
+import { Sparkles, RefreshCw, AlertCircle, BookOpen, BarChart3 } from 'lucide-react';
+import { TopicIcon } from './TopicIcon';
 import { SentenceDisplay } from './SentenceDisplay';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
@@ -161,7 +162,7 @@ export function SentenceGenerator({ topics, userId }: SentenceGeneratorProps) {
               {topics.map((topic) => (
                 <SelectItem key={topic.id} value={topic.id}>
                   <div className="flex items-center gap-2">
-                    <span>{topic.icon || '📖'}</span>
+                    <TopicIcon icon={topic.icon} size={16} />
                     <span>{topic.name}</span>
                     {topic.nameVi && (
                       <span className="text-muted-foreground">({topic.nameVi})</span>
@@ -175,8 +176,9 @@ export function SentenceGenerator({ topics, userId }: SentenceGeneratorProps) {
           {/* IELTS Level Display */}
           {ieltsLevel && (
             <div className="p-3 border rounded-lg bg-primary/5 border-primary/20">
-              <p className="text-sm font-medium text-primary">
-                📊 Your IELTS Level: {ieltsLevel}
+              <p className="text-sm font-medium text-primary flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                Your IELTS Level: {ieltsLevel}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 Content will be generated appropriate for your level

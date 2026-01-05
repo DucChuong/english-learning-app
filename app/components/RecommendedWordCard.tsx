@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Volume2, Plus } from 'lucide-react';
+import { Sparkles, Volume2, Plus, BookOpen } from 'lucide-react';
 import { RecommendedWord } from '@/app/lib/deepseek';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
@@ -54,12 +54,14 @@ export function RecommendedWordCard({ word, onAddToLearning }: RecommendedWordCa
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <Badge variant="secondary" className="mb-2">
-              ✨ AI Recommended
+            <Badge variant="secondary" className="mb-2 flex items-center gap-1 w-fit">
+              <Sparkles className="w-3 h-3" />
+              AI Recommended
             </Badge>
             {word.topic && (
-              <CardDescription className="mb-1">
-                📚 {word.topic}
+              <CardDescription className="mb-1 flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                {word.topic}
               </CardDescription>
             )}
             <CardTitle className="text-2xl">{word.word}</CardTitle>

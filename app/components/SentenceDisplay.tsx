@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpen, Save, Plus, Check } from 'lucide-react';
+import { BookOpen, Save, Plus, Check, Book } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
@@ -144,8 +144,15 @@ export function SentenceDisplay({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl">
-              {isStory ? '📖 Generated Story' : 'Generated Sentence'}
+            <CardTitle className="text-xl flex items-center gap-2">
+              {isStory ? (
+                <>
+                  <Book className="w-5 h-5" />
+                  Generated Story
+                </>
+              ) : (
+                'Generated Sentence'
+              )}
             </CardTitle>
             <CardDescription className="mt-1">
               Topic: {topicName} • {isStory ? 'Story Mode' : 'Short Sentence'}

@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
 import { redirect } from 'next/navigation';
 import { ProgressOverview } from '@/app/components/ProgressOverview';
-import { CheckCircle, Clock, BookOpen, TrendingUp } from 'lucide-react';
+import { CheckCircle, Clock, BookOpen, TrendingUp, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
 
@@ -60,7 +60,10 @@ export default async function ProgressPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">📊 Your Progress</h1>
+      <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
+        <BarChart3 className="w-8 h-8" />
+        Your Progress
+      </h1>
 
       {/* Overview Stats */}
       <div className="mb-8">

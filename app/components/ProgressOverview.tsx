@@ -25,7 +25,7 @@ export function ProgressOverview({ stats }: ProgressOverviewProps) {
             <div>
               <p className="text-sm opacity-90">Daily Streak</p>
               <p className="text-4xl font-bold mt-1">{stats.streak}</p>
-              <p className="text-sm mt-1">days 🔥</p>
+              <p className="text-sm mt-1">days</p>
             </div>
             <Flame className="w-12 h-12 opacity-80" />
           </div>

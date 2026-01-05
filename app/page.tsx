@@ -5,6 +5,7 @@ import { RecommendedWordsSection } from './components/RecommendedWordsSection';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './lib/auth';
 import { redirect } from 'next/navigation';
+import { Hand, BookOpen } from 'lucide-react';
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
@@ -49,14 +50,17 @@ export default async function HomePage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">
-        Welcome back, {session.user.name}! 👋
+      <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
+        Welcome back, {session.user.name}! <Hand className="w-8 h-8" />
       </h1>
 
       <ProgressOverview stats={stats} />
 
       <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">📚 Today's Words</h2>
+        <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+          <BookOpen className="w-6 h-6" />
+          Today's Words
+        </h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {todayWords.map((word) => (
             <WordCard key={word.id} word={word} />

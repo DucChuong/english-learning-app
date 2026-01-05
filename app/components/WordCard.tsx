@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
+import { TopicIcon } from './TopicIcon';
 
 interface WordCardProps {
   word: {
@@ -39,8 +40,9 @@ export function WordCard({ word }: WordCardProps) {
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardDescription className="mb-2">
-              {word.topic.icon} {word.topic.name}
+            <CardDescription className="mb-2 flex items-center gap-2">
+              <TopicIcon icon={word.topic.icon} size={16} />
+              {word.topic.name}
             </CardDescription>
             <CardTitle className="text-2xl">{word.word}</CardTitle>
             {word.phonetic && (

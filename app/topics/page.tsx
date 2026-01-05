@@ -4,6 +4,7 @@ import { authOptions } from '@/app/lib/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { BookOpen, ChevronRight } from 'lucide-react';
+import { TopicIcon } from '@/app/components/TopicIcon';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 
 export default async function TopicsPage() {
@@ -51,7 +52,10 @@ export default async function TopicsPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">📚 Topics</h1>
+      <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
+        <BookOpen className="w-8 h-8" />
+        Topics
+      </h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {topicsWithProgress.map((topic) => (
@@ -60,7 +64,7 @@ export default async function TopicsPage() {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="text-4xl">{topic.icon || '📖'}</div>
+                    <TopicIcon icon={topic.icon} size={32} className="text-primary" />
                     <div>
                       <CardTitle className="text-xl">{topic.name}</CardTitle>
                       {topic.nameVi && (

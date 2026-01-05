@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, X, ChevronRight } from 'lucide-react';
+import { Check, X, ChevronRight, PartyPopper } from 'lucide-react';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
@@ -158,7 +158,8 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
                 {isCorrect ? (
                   <>
                     <Check className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    <span className="font-semibold">Correct! 🎉</span>
+                    <PartyPopper className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    <span className="font-semibold">Correct!</span>
                   </>
                 ) : (
                   <>
@@ -202,8 +203,9 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
                   <div className="flex-1">
                     <Alert className="text-center">
                       <AlertDescription>
-                        <p className="font-semibold mb-2">
-                          🎉 Exercise Complete!
+                        <p className="font-semibold mb-2 flex items-center justify-center gap-2">
+                          <PartyPopper className="w-5 h-5" />
+                          Exercise Complete!
                         </p>
                         <p className="text-sm mb-3">
                           You scored {score.correct} out of {score.total}
