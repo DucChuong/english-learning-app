@@ -22,9 +22,10 @@ export default async function LearnPage({ params }: LearnPageProps) {
   if (!session) {
     redirect('/login');
   }
+  const { wordId } = await params;
 
   const word = await prisma.vocabulary.findUnique({
-    where: { id: params.wordId },
+    where: { id: wordId },
     include: {
       topic: true,
       exercises: true,
