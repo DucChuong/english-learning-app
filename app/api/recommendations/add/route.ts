@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
 import { RecommendedWord, generateExercisesForWord } from "@/app/lib/deepseek";
-import { ExerciseType } from "@prisma/client";
+import { ExerciseType } from "@/prisma/enums";
 
 export async function POST(request: Request) {
   try {
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
           await prisma.exercise.create({
             data: {
               vocabularyId: vocabulary.id,
-              type: exercise.type as ExerciseType,
+              type: exercise.type,
               question: exercise.question,
               questionVi: exercise.questionVi,
               options: exercise.options,
