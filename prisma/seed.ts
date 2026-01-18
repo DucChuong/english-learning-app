@@ -1,4 +1,6 @@
-import { PrismaClient, Level, ExerciseType } from "@prisma/client";
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+import { PrismaClient } from "@prisma/client";
+import { ExerciseType, Level } from "./enums";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +39,7 @@ async function main() {
     order: 1,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I'm writing _____ the project deadline.",
         questionVi: "Tôi viết email _____ thời hạn dự án.",
         options: ["regarding", "about", "for", "with"],
@@ -46,7 +48,7 @@ async function main() {
           '"Regarding" is more formal and commonly used in business emails.',
       },
       {
-        type: ExerciseType.FILL_BLANK,
+        type: String(ExerciseType.FILL_BLANK),
         question: "Please contact me _____ any questions.",
         questionVi: "Vui lòng liên hệ tôi _____ bất kỳ câu hỏi nào.",
         options: [],
@@ -66,7 +68,7 @@ async function main() {
     order: 2,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please find the report _____.",
         questionVi: "Vui lòng xem báo cáo _____.",
         options: ["attached", "attaching", "attach", "attachment"],
@@ -87,7 +89,7 @@ async function main() {
     order: 3,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Could you _____ send me the file?",
         questionVi: "Bạn có thể _____ gửi cho tôi file không?",
         options: ["kindly", "kind", "kindness", "kinder"],
@@ -107,7 +109,7 @@ async function main() {
     order: 4,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to address this issue _____.",
         questionVi: "Chúng ta cần giải quyết vấn đề này _____.",
         options: ["promptly", "prompt", "prompted", "prompting"],
@@ -127,7 +129,7 @@ async function main() {
     order: 5,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I _____ your concerns about the timeline.",
         questionVi: "Tôi _____ mối lo ngại của bạn về thời gian.",
         options: [
@@ -153,7 +155,7 @@ async function main() {
     order: 6,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "This is an _____ request.",
         questionVi: "Đây là một yêu cầu _____.",
         options: ["urgent", "urgency", "urgently", "urge"],
@@ -173,7 +175,7 @@ async function main() {
     order: 7,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Could you provide some _____ on this point?",
         questionVi: "Bạn có thể cung cấp _____ về điểm này không?",
         options: ["clarification", "clarify", "clear", "clearly"],
@@ -193,7 +195,7 @@ async function main() {
     order: 8,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I'm _____ on our meeting yesterday.",
         questionVi: "Tôi đang _____ cuộc họp hôm qua của chúng ta.",
         options: ["following up", "follow up", "followed up", "follows up"],
@@ -213,7 +215,7 @@ async function main() {
     order: 9,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Can we extend the _____ by one week?",
         questionVi: "Chúng ta có thể gia hạn _____ thêm một tuần không?",
         options: ["deadline", "dead", "line", "deadlines"],
@@ -233,7 +235,7 @@ async function main() {
     order: 10,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Customer satisfaction is our main _____.",
         questionVi: "Sự hài lòng của khách hàng là _____ chính của chúng tôi.",
         options: ["priority", "prior", "prioritize", "priorities"],
@@ -254,7 +256,7 @@ async function main() {
     order: 11,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I _____ for any inconvenience caused.",
         questionVi: "Tôi _____ vì bất kỳ sự bất tiện nào gây ra.",
         options: ["apologize", "apology", "apologized", "apologizing"],
@@ -275,7 +277,7 @@ async function main() {
     order: 12,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Sorry for the _____.",
         questionVi: "Xin lỗi vì sự _____.",
         options: [
@@ -300,7 +302,7 @@ async function main() {
     order: 13,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The mistake was due to an _____.",
         questionVi: "Lỗi này là do một _____.",
         options: ["oversight", "oversee", "oversaw", "overseeing"],
@@ -320,7 +322,7 @@ async function main() {
     order: 14,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We experienced a minor _____ yesterday.",
         questionVi: "Chúng tôi gặp một _____ nhỏ ngày hôm qua.",
         options: ["mishap", "mishaps", "mishapping", "mishapped"],
@@ -340,7 +342,7 @@ async function main() {
     order: 15,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to _____ the error as soon as possible.",
         questionVi: "Chúng ta cần _____ lỗi càng sớm càng tốt.",
         options: ["rectify", "rectified", "rectifying", "rectifies"],
@@ -375,7 +377,7 @@ async function main() {
     order: 16,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Can we _____ a call for tomorrow?",
         questionVi: "Chúng ta có thể _____ một cuộc gọi cho ngày mai không?",
         options: ["schedule", "scheduled", "scheduling", "schedules"],
@@ -395,7 +397,7 @@ async function main() {
     order: 17,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "What is your _____ this week?",
         questionVi: "_____ của bạn tuần này như thế nào?",
         options: ["availability", "available", "availably", "availabilities"],
@@ -415,7 +417,7 @@ async function main() {
     order: 18,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "This is just a _____ plan for now.",
         questionVi: "Đây chỉ là một kế hoạch _____ hiện tại.",
         options: ["tentative", "tentatively", "tentativeness", "tentatives"],
@@ -435,7 +437,7 @@ async function main() {
     order: 19,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I need to _____ our appointment.",
         questionVi: "Tôi cần _____ cuộc hẹn của chúng ta.",
         options: ["reschedule", "rescheduled", "rescheduling", "reschedules"],
@@ -455,7 +457,7 @@ async function main() {
     order: 20,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please review the meeting _____ before we start.",
         questionVi: "Vui lòng xem lại _____ cuộc họp trước khi bắt đầu.",
         options: ["agenda", "agendas", "agendum", "agent"],
@@ -476,7 +478,7 @@ async function main() {
     order: 21,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We can _____ with the presentation now.",
         questionVi: "Chúng ta có thể _____ bản trình bày ngay bây giờ.",
         options: ["proceed", "proceeded", "proceeding", "proceeds"],
@@ -496,7 +498,7 @@ async function main() {
     order: 22,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "I apologize for _____ the meeting.",
         questionVi: "Tôi xin lỗi vì _____ cuộc họp.",
         options: ["interrupting", "interrupt", "interrupted", "interrupts"],
@@ -516,7 +518,7 @@ async function main() {
     order: 23,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please _____ on your proposal.",
         questionVi: "Vui lòng _____ về đề xuất của bạn.",
         options: ["elaborate", "elaborated", "elaborating", "elaborates"],
@@ -536,7 +538,7 @@ async function main() {
     order: 24,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to find a _____ before moving forward.",
         questionVi: "Chúng ta cần tìm một _____ trước khi tiếp tục.",
         options: ["consensus", "consensuses", "consensual", "consent"],
@@ -556,7 +558,7 @@ async function main() {
     order: 25,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please complete all _____ by Friday.",
         questionVi: "Vui lòng hoàn thành tất cả _____ trước thứ Sáu.",
         options: [
@@ -594,10 +596,10 @@ async function main() {
     phonetic: "/ˈmaɪlstoʊn/",
     topicId: projectTopic.id,
     order: 26,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Completing the prototype is a major _____.",
         questionVi: "Hoàn thành nguyên mẫu là một _____ lớn.",
         options: ["milestone", "milestones", "mile", "stone"],
@@ -615,10 +617,10 @@ async function main() {
     phonetic: "/dɪˈlɪvərəbl/",
     topicId: projectTopic.id,
     order: 27,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "What are the key _____ for this sprint?",
         questionVi: "Các _____ chính cho sprint này là gì?",
         options: ["deliverables", "deliverable", "deliver", "delivered"],
@@ -636,10 +638,10 @@ async function main() {
     phonetic: "/skoʊp/",
     topicId: projectTopic.id,
     order: 28,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to define the project _____.",
         questionVi: "Chúng ta cần xác định _____ dự án.",
         options: ["scope", "scopes", "scoping", "scoped"],
@@ -657,10 +659,10 @@ async function main() {
     phonetic: "/ˈsteɪkhoʊldər/",
     topicId: projectTopic.id,
     order: 29,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The _____ meeting is scheduled for Monday.",
         questionVi: "Cuộc họp _____ được lên lịch vào thứ Hai.",
         options: ["stakeholder", "stakeholders", "stake", "holder"],
@@ -678,10 +680,10 @@ async function main() {
     phonetic: "/ˈroʊdmæp/",
     topicId: projectTopic.id,
     order: 30,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The product _____ shows our priorities.",
         questionVi: "_____ sản phẩm cho thấy ưu tiên của chúng ta.",
         options: ["roadmap", "road", "map", "roadmaps"],
@@ -700,10 +702,10 @@ async function main() {
     phonetic: "/ɑːn træk/",
     topicId: projectTopic.id,
     order: 31,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We're still _____ to meet our goals.",
         questionVi: "Chúng ta vẫn _____ để đạt được mục tiêu.",
         options: ["on track", "in track", "at track", "by track"],
@@ -721,10 +723,10 @@ async function main() {
     phonetic: "/bɪˈhaɪnd ˈskedʒuːl/",
     topicId: projectTopic.id,
     order: 32,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The project is running _____.",
         questionVi: "Dự án đang _____ tiến độ.",
         options: [
@@ -747,10 +749,10 @@ async function main() {
     phonetic: "/ˈblɑːkər/",
     topicId: projectTopic.id,
     order: 33,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "What are the current _____ for the team?",
         questionVi: "_____ hiện tại của nhóm là gì?",
         options: ["blockers", "blocker", "block", "blocking"],
@@ -768,10 +770,10 @@ async function main() {
     phonetic: "/ˈsteɪtəs ˈʌpdeɪt/",
     topicId: projectTopic.id,
     order: 34,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need a weekly _____ from each team.",
         questionVi: "Chúng ta cần một _____ hàng tuần từ mỗi nhóm.",
         options: ["status update", "update status", "status", "update"],
@@ -789,10 +791,10 @@ async function main() {
     phonetic: "/ˈbɑːtlnek/",
     topicId: projectTopic.id,
     order: 35,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to identify and remove any _____.",
         questionVi: "Chúng ta cần xác định và loại bỏ bất kỳ _____ nào.",
         options: ["bottlenecks", "bottleneck", "bottle", "neck"],
@@ -827,7 +829,7 @@ async function main() {
     order: 36,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to _____ more effectively.",
         questionVi: "Chúng ta cần _____ hiệu quả hơn.",
         options: [
@@ -852,7 +854,7 @@ async function main() {
     order: 37,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We should _____ some tasks to junior members.",
         questionVi:
           "Chúng ta nên _____ một số công việc cho thành viên junior.",
@@ -873,7 +875,7 @@ async function main() {
     order: 38,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please _____ with the marketing team.",
         questionVi: "Vui lòng _____ với nhóm marketing.",
         options: ["coordinate", "coordinated", "coordinating", "coordination"],
@@ -893,7 +895,7 @@ async function main() {
     order: 39,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We should _____ new features for the app.",
         questionVi: "Chúng ta nên _____ các tính năng mới cho ứng dụng.",
         options: ["brainstorm", "brainstormed", "brainstorming", "brainstorms"],
@@ -913,7 +915,7 @@ async function main() {
     order: 40,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The _____ between teams is impressive.",
         questionVi: "_____ giữa các nhóm thật ấn tượng.",
         options: ["synergy", "synergies", "synergistic", "synergize"],
@@ -934,7 +936,7 @@ async function main() {
     order: 41,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Please provide _____ criticism.",
         questionVi: "Vui lòng đưa ra lời phê bình _____.",
         options: [
@@ -959,7 +961,7 @@ async function main() {
     order: 42,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Your _____ was very helpful.",
         questionVi: "_____ của bạn rất hữu ích.",
         options: ["insight", "insights", "insightful", "insighting"],
@@ -979,7 +981,7 @@ async function main() {
     order: 43,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to _____ our strategy.",
         questionVi: "Chúng ta cần _____ chiến lược của mình.",
         options: ["revise", "revised", "revising", "revision"],
@@ -999,7 +1001,7 @@ async function main() {
     order: 44,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We can _____ this process further.",
         questionVi: "Chúng ta có thể _____ quy trình này hơn nữa.",
         options: ["refine", "refined", "refining", "refinement"],
@@ -1019,7 +1021,7 @@ async function main() {
     order: 45,
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "We need to _____ quickly on this feature.",
         questionVi: "Chúng ta cần _____ nhanh chóng trên tính năng này.",
         options: ["iterate", "iterated", "iterating", "iteration"],
@@ -1053,10 +1055,10 @@ async function main() {
     phonetic: "/ˈoʊvərvjuː/",
     topicId: presentationTopic.id,
     order: 46,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Let me give you an _____ of the situation.",
         questionVi: "Để tôi đưa ra một _____ về tình hình.",
         options: ["overview", "view", "over", "overviews"],
@@ -1075,10 +1077,10 @@ async function main() {
     phonetic: "/ˈhaɪlaɪt/",
     topicId: presentationTopic.id,
     order: 47,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Let's _____ the most important points.",
         questionVi: "Hãy _____ những điểm quan trọng nhất.",
         options: ["highlight", "highlighted", "highlighting", "highlights"],
@@ -1096,10 +1098,10 @@ async function main() {
     phonetic: "/ˈdemənstreɪt/",
     topicId: presentationTopic.id,
     order: 48,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Can you _____ the process?",
         questionVi: "Bạn có thể _____ quy trình không?",
         options: [
@@ -1122,10 +1124,10 @@ async function main() {
     phonetic: "/ˈfaɪndɪŋz/",
     topicId: presentationTopic.id,
     order: 49,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "The research _____ are very interesting.",
         questionVi: "_____ nghiên cứu rất thú vị.",
         options: ["findings", "finding", "find", "found"],
@@ -1144,10 +1146,10 @@ async function main() {
     phonetic: "/ˈsʌməraɪz/",
     topicId: presentationTopic.id,
     order: 50,
-    level: Level.INTERMEDIATE,
+    level: String(Level.INTERMEDIATE),
     exercises: [
       {
-        type: ExerciseType.MULTIPLE_CHOICE,
+        type: String(ExerciseType.MULTIPLE_CHOICE),
         question: "Can you _____ the main points?",
         questionVi: "Bạn có thể _____ các điểm chính không?",
         options: ["summarize", "summary", "summarized", "summarizing"],
@@ -1187,7 +1189,7 @@ async function createWord(data: {
   const vocabulary = await prisma.vocabulary.create({
     data: {
       ...vocabData,
-      level: level || Level.BEGINNER,
+      level: level || String(Level.BEGINNER),
       audioUrl: `/audio/${data.word.toLowerCase().replace(/ /g, "-")}.mp3`,
     },
   });

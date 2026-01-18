@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader } from '@/app/components/ui/card';
+import { Card, CardContent, CardHeader } from "@/app/components/ui/card";
 
 export function HomePageSkeleton() {
   return (
@@ -112,7 +112,10 @@ export function ProgressPageSkeleton() {
             <CardContent>
               <div className="space-y-3">
                 {[1, 2, 3].map((j) => (
-                  <div key={j} className="h-20 bg-muted rounded animate-pulse" />
+                  <div
+                    key={j}
+                    className="h-20 bg-muted rounded animate-pulse"
+                  />
                 ))}
               </div>
             </CardContent>

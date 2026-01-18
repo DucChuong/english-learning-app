@@ -1,4 +1,5 @@
-undefined
- ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "devcat" not found
+import { TopicsPageSkeleton } from "@/app/components/LoadingSkeletons";
 
-Did you mean "pnpm dev"?
+export default function Loading() {
+  return <TopicsPageSkeleton />;
+}

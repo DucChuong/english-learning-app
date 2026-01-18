@@ -1,15 +1,3 @@
--- CreateEnum
-CREATE TYPE "Level" AS ENUM ('BEGINNER', 'INTERMEDIATE', 'ADVANCED');
--- CreateEnum
-CREATE TYPE "ProgressStatus" AS ENUM ('NEW', 'LEARNING', 'REVIEWING', 'MASTERED');
--- CreateEnum
-CREATE TYPE "ExerciseType" AS ENUM (
-    'MULTIPLE_CHOICE',
-    'FILL_BLANK',
-    'MATCHING',
-    'LISTENING',
-    'SENTENCE_BUILD'
-);
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -35,7 +23,7 @@ CREATE TABLE "vocabularies" (
     "phonetic" TEXT,
     "audioUrl" TEXT,
     "topicId" TEXT NOT NULL,
-    "level" "Level" NOT NULL DEFAULT 'BEGINNER',
+    "level" TEXT NOT NULL DEFAULT 'BEGINNER',
     "order" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "vocabularies_pkey" PRIMARY KEY ("id")
@@ -55,7 +43,7 @@ CREATE TABLE "user_progress" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "vocabularyId" TEXT NOT NULL,
-    "status" "ProgressStatus" NOT NULL DEFAULT 'NEW',
+    "status" TEXT NOT NULL DEFAULT 'NEW',
     "correctCount" INTEGER NOT NULL DEFAULT 0,
     "incorrectCount" INTEGER NOT NULL DEFAULT 0,
     "lastReviewed" TIMESTAMP(3),
@@ -68,7 +56,7 @@ CREATE TABLE "user_progress" (
 CREATE TABLE "exercises" (
     "id" TEXT NOT NULL,
     "vocabularyId" TEXT NOT NULL,
-    "type" "ExerciseType" NOT NULL,
+    "type" TEXT NOT NULL,
     "question" TEXT NOT NULL,
     "questionVi" TEXT,
     "options" TEXT [],
@@ -98,8 +86,6 @@ CREATE TABLE "daily_recommendations" (
 );
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
--- CreateIndex
-CREATE UNIQUE INDEX "vocabularies_word_key" ON "vocabularies"("word");
 -- CreateIndex
 CREATE INDEX "vocabularies_topicId_idx" ON "vocabularies"("topicId");
 -- CreateIndex
