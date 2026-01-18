@@ -1,18 +1,16 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/lib/auth';
-import { prisma } from '@/app/lib/prisma';
-import { RecommendedWord } from '@/app/lib/deepseek';
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/lib/auth";
+import { prisma } from "@/app/lib/prisma";
+import { RecommendedWord, generateExercisesForWord } from "@/app/lib/deepseek";
+import { ExerciseType } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const wordData: RecommendedWord = await request.json();
@@ -29,14 +27,14 @@ export async function POST(request: Request) {
     } else {
       // Find or create topic
       let topic = await prisma.topic.findFirst({
-        where: { name: wordData.topic || 'General' },
+        where: { name: wordData.topic || "General" },
       });
 
       if (!topic) {
         topic = await prisma.topic.create({
           data: {
-            name: wordData.topic || 'General',
-            nameVi: wordData.topic || 'Chung',
+            name: wordData.topic || "General",
+            nameVi: wordData.topic || "Chung",
             order: 999, // Place at the end
           },
         });
@@ -44,7 +42,7 @@ export async function POST(request: Request) {
 
       // Get the next order number
       const maxOrder = await prisma.vocabulary.findFirst({
-        orderBy: { order: 'desc' },
+        orderBy: { order: "desc" },
         select: { order: true },
       });
 
@@ -62,6 +60,40 @@ export async function POST(request: Request) {
           order: (maxOrder?.order || 0) + 1,
         },
       });
+
+      // Generate exercises for the new word
+      try {
+        const generatedExercises = await generateExercisesForWord(
+          wordData.word,
+          wordData.meaning,
+          wordData.meaningVi,
+          wordData.example,
+          wordData.exampleVi,
+          wordData.level
+        );
+
+        // Create exercises in database
+        for (const exercise of generatedExercises) {
+          await prisma.exercise.create({
+            data: {
+              vocabularyId: vocabulary.id,
+              type: exercise.type as ExerciseType,
+              question: exercise.question,
+              questionVi: exercise.questionVi,
+              options: exercise.options,
+              correctAnswer: exercise.correctAnswer,
+              explanation: exercise.explanation || null,
+            },
+          });
+        }
+
+        console.log(
+          `✅ Generated ${generatedExercises.length} exercises for word: ${wordData.word}`
+        );
+      } catch (exerciseError) {
+        // Log error but don't fail the request - word was added successfully
+        console.error("Failed to generate exercises:", exerciseError);
+      }
     }
 
     // Check if user already has progress for this word
@@ -80,24 +112,23 @@ export async function POST(request: Request) {
         data: {
           userId: session.user.id,
           vocabularyId: vocabulary.id,
-          status: 'NEW',
+          status: "NEW",
         },
       });
     }
 
     return NextResponse.json(
-      { 
-        message: 'Word added to learning',
-        vocabularyId: vocabulary.id 
+      {
+        message: "Word added to learning",
+        vocabularyId: vocabulary.id,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Add word error:', error);
+    console.error("Add word error:", error);
     return NextResponse.json(
-      { error: 'Failed to add word to learning' },
+      { error: "Failed to add word to learning" },
       { status: 500 }
     );
   }
 }
-

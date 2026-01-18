@@ -1,7 +1,8 @@
-import { OpenRouter } from '@openrouter/sdk';
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+import { OpenRouter } from "@openrouter/sdk";
 
 interface OpenRouterMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 }
 
@@ -12,7 +13,7 @@ export interface RecommendedWord {
   example: string;
   exampleVi: string;
   phonetic?: string;
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
   topic?: string;
 }
 
@@ -31,16 +32,16 @@ export async function getRecommendedWords(
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (!apiKey) {
-    throw new Error('OPENROUTER_API_KEY is not configured');
+    throw new Error("OPENROUTER_API_KEY is not configured");
   }
 
-  const levelDescription = ieltsLevel 
+  const levelDescription = ieltsLevel
     ? `The user's IELTS level is ${ieltsLevel}. Recommend words appropriate for IELTS ${ieltsLevel} level.`
-    : 'Recommend words appropriate for intermediate level learners.';
+    : "Recommend words appropriate for intermediate level learners.";
 
   const messages: OpenRouterMessage[] = [
     {
-      role: 'system',
+      role: "system",
       content: `You are an English vocabulary learning assistant. Recommend 5 new English words for a learner based on their progress and IELTS level.
       
 User's current progress:
@@ -49,7 +50,7 @@ User's current progress:
 - Words currently learning: ${userProgress.learning}
 ${levelDescription}
 
-Already learned words (avoid these): ${learnedWords.join(', ') || 'none'}
+Already learned words (avoid these): ${learnedWords.join(", ") || "none"}
 
 For each recommended word, provide:
 1. The English word
@@ -61,11 +62,15 @@ For each recommended word, provide:
 7. Difficulty level (BEGINNER, INTERMEDIATE, or ADVANCED) - should match the IELTS level
 8. Suggested topic category (e.g., "Daily Life", "Business", "Technology", etc.)
 
-${ieltsLevel ? `Word difficulty mapping:
+${
+  ieltsLevel
+    ? `Word difficulty mapping:
 - IELTS 4.0-5.0: Use BEGINNER level words
 - IELTS 5.5-6.5: Use INTERMEDIATE level words  
 - IELTS 7.0-8.0: Use ADVANCED level words
-- IELTS 8.5+: Use ADVANCED level words with academic vocabulary` : ''}
+- IELTS 8.5+: Use ADVANCED level words with academic vocabulary`
+    : ""
+}
 
 Return ONLY a valid JSON array with this exact structure:
 [
@@ -84,7 +89,7 @@ Return ONLY a valid JSON array with this exact structure:
 Make sure the words are appropriate for the user's IELTS level and will help them progress.`,
     },
     {
-      role: 'user',
+      role: "user",
       content: `Please recommend 5 new English words for today's learning session. Consider my current progress and suggest words that will help me advance.`,
     },
   ];
@@ -95,7 +100,7 @@ Make sure the words are appropriate for the user's IELTS level and will help the
     });
 
     const completion = await openrouter.chat.send({
-      model: 'deepseek/deepseek-chat',
+      model: "deepseek/deepseek-chat",
       messages: messages as any,
       temperature: 0.7,
       maxTokens: 2000,
@@ -103,35 +108,35 @@ Make sure the words are appropriate for the user's IELTS level and will help the
     });
 
     const messageContent = completion.choices[0]?.message?.content;
-    
+
     // Handle content that might be string or array
     let content: string;
-    if (typeof messageContent === 'string') {
+    if (typeof messageContent === "string") {
       content = messageContent;
     } else if (Array.isArray(messageContent)) {
       // Extract text from content array
       content = messageContent
-        .filter((item: any) => item.type === 'text')
+        .filter((item: any) => item.type === "text")
         .map((item: any) => item.text)
-        .join('');
+        .join("");
     } else {
-      throw new Error('No content received from OpenRouter API');
+      throw new Error("No content received from OpenRouter API");
     }
 
     if (!content) {
-      throw new Error('No content received from OpenRouter API');
+      throw new Error("No content received from OpenRouter API");
     }
 
     // Extract JSON from the response (handle cases where AI adds extra text)
     const jsonMatch = content.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
-      throw new Error('Could not parse JSON from OpenRouter response');
+      throw new Error("Could not parse JSON from OpenRouter response");
     }
 
     const recommendedWords: RecommendedWord[] = JSON.parse(jsonMatch[0]);
     return recommendedWords;
   } catch (error) {
-    console.error('OpenRouter API error:', error);
+    console.error("OpenRouter API error:", error);
     throw error;
   }
 }
@@ -151,7 +156,7 @@ export async function getTodayWordRecommendation(
     const words = await getRecommendedWords(userProgress, learnedWords);
     return words[0] || null;
   } catch (error) {
-    console.error('Failed to get word recommendation:', error);
+    console.error("Failed to get word recommendation:", error);
     return null;
   }
 }
@@ -180,35 +185,43 @@ export async function generateSentenceWithWords(
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (!apiKey) {
-    throw new Error('OPENROUTER_API_KEY is not configured');
+    throw new Error("OPENROUTER_API_KEY is not configured");
   }
 
-  const sentenceType = isStory 
-    ? 'a longer story-like sentence or short paragraph (>100 words) that tells a mini story or narrative'
-    : 'a natural English sentence (10-20 words)';
+  const sentenceType = isStory
+    ? "a longer story-like sentence or short paragraph (>100 words) that tells a mini story or narrative"
+    : "a natural English sentence (10-20 words)";
 
   const levelDescription = ieltsLevel
     ? `The user's IELTS level is ${ieltsLevel}. Generate content appropriate for IELTS ${ieltsLevel} level. Use vocabulary and sentence structures that match this level.`
-    : 'Generate content appropriate for intermediate level learners (IELTS 5.5-6.5).';
+    : "Generate content appropriate for intermediate level learners (IELTS 5.5-6.5).";
 
   const messages: OpenRouterMessage[] = [
     {
-      role: 'system',
+      role: "system",
       content: `You are an English learning assistant. Generate ${sentenceType} related to the topic "${topicName}".
 
 ${levelDescription}
 
-The ${isStory ? 'story/sentence' : 'sentence'} should:
-1. Be natural and engaging${isStory ? ', like a mini story or narrative' : ''}
-2. Include 4-8 vocabulary words from this topic (if provided): ${topicWords.join(', ') || 'any words related to the topic'}
+The ${isStory ? "story/sentence" : "sentence"} should:
+1. Be natural and engaging${isStory ? ", like a mini story or narrative" : ""}
+2. Include 4-8 vocabulary words from this topic (if provided): ${
+        topicWords.join(", ") || "any words related to the topic"
+      }
 3. Use vocabulary and grammar appropriate for the specified IELTS level
 4. Include a Vietnamese translation
-${isStory ? '5. Tell a complete mini story or narrative that makes sense\n6. Be interesting and engaging to read' : ''}
+${
+  isStory
+    ? "5. Tell a complete mini story or narrative that makes sense\n6. Be interesting and engaging to read"
+    : ""
+}
 
 Return ONLY a valid JSON object with this exact structure:
 {
-  "sentence": "The complete ${isStory ? 'story/sentence' : 'sentence'} text",
-  "translation": "Vietnamese translation of the ${isStory ? 'story/sentence' : 'sentence'}",
+  "sentence": "The complete ${isStory ? "story/sentence" : "sentence"} text",
+  "translation": "Vietnamese translation of the ${
+    isStory ? "story/sentence" : "sentence"
+  }",
   "highlightedWords": [
     {
       "word": "vocabulary word from the sentence",
@@ -220,11 +233,15 @@ Return ONLY a valid JSON object with this exact structure:
   ]
 }
 
-The startIndex and endIndex should indicate where the word appears in the sentence (character positions). Make sure to highlight ALL vocabulary words from the topic that appear in the ${isStory ? 'story' : 'sentence'}.`,
+The startIndex and endIndex should indicate where the word appears in the sentence (character positions). Make sure to highlight ALL vocabulary words from the topic that appear in the ${
+        isStory ? "story" : "sentence"
+      }.`,
     },
     {
-      role: 'user',
-      content: `Generate ${isStory ? 'a story-like sentence or short paragraph' : 'a sentence'} about "${topicName}" with highlighted vocabulary words.`,
+      role: "user",
+      content: `Generate ${
+        isStory ? "a story-like sentence or short paragraph" : "a sentence"
+      } about "${topicName}" with highlighted vocabulary words.`,
     },
   ];
 
@@ -234,7 +251,7 @@ The startIndex and endIndex should indicate where the word appears in the senten
     });
 
     const completion = await openrouter.chat.send({
-      model: 'deepseek/deepseek-chat',
+      model: "deepseek/deepseek-chat",
       messages: messages as any,
       temperature: 0.8,
       maxTokens: isStory ? 2000 : 1000, // More tokens for story-like sentences
@@ -242,47 +259,175 @@ The startIndex and endIndex should indicate where the word appears in the senten
     });
 
     const messageContent = completion.choices[0]?.message?.content;
-    
+
     // Handle content that might be string or array
     let content: string;
-    if (typeof messageContent === 'string') {
+    if (typeof messageContent === "string") {
       content = messageContent;
     } else if (Array.isArray(messageContent)) {
       // Extract text from content array
       content = messageContent
-        .filter((item: any) => item.type === 'text')
+        .filter((item: any) => item.type === "text")
         .map((item: any) => item.text)
-        .join('');
+        .join("");
     } else {
-      throw new Error('No content received from OpenRouter API');
+      throw new Error("No content received from OpenRouter API");
     }
 
     if (!content) {
-      throw new Error('No content received from OpenRouter API');
+      throw new Error("No content received from OpenRouter API");
     }
 
     // Extract JSON from the response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error('Could not parse JSON from OpenRouter response');
+      throw new Error("Could not parse JSON from OpenRouter response");
     }
 
     const sentence: GeneratedSentence = JSON.parse(jsonMatch[0]);
-    
+
     // Validate and fix indices if needed
     sentence.highlightedWords = sentence.highlightedWords.map((word) => {
-      const actualIndex = sentence.sentence.toLowerCase().indexOf(word.word.toLowerCase());
+      const actualIndex = sentence.sentence
+        .toLowerCase()
+        .indexOf(word.word.toLowerCase());
       return {
         ...word,
         startIndex: actualIndex >= 0 ? actualIndex : word.startIndex,
-        endIndex: actualIndex >= 0 ? actualIndex + word.word.length : word.endIndex,
+        endIndex:
+          actualIndex >= 0 ? actualIndex + word.word.length : word.endIndex,
       };
     });
 
     return sentence;
   } catch (error) {
-    console.error('OpenRouter API error:', error);
+    console.error("OpenRouter API error:", error);
     throw error;
   }
 }
 
+export interface GeneratedExercise {
+  type: "MULTIPLE_CHOICE" | "FILL_BLANK" | "MATCHING";
+  question: string;
+  questionVi: string;
+  options: string[];
+  correctAnswer: string;
+  explanation?: string;
+}
+
+/**
+ * Generate exercises for a vocabulary word using AI
+ */
+export async function generateExercisesForWord(
+  word: string,
+  meaning: string,
+  meaningVi: string,
+  example: string,
+  exampleVi: string,
+  level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED"
+): Promise<GeneratedExercise[]> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
+  }
+
+  const messages: OpenRouterMessage[] = [
+    {
+      role: "system",
+      content: `You are an English vocabulary learning assistant. Generate 3 diverse exercises for learning the word "${word}".
+
+Word details:
+- Meaning: ${meaning}
+- Vietnamese meaning: ${meaningVi}
+- Example: ${example}
+- Vietnamese example: ${exampleVi}
+- Difficulty level: ${level}
+
+Create exactly 3 exercises with different types:
+1. One MULTIPLE_CHOICE exercise with 4 options
+2. One FILL_BLANK exercise (options can be empty)
+3. One MATCHING or MULTIPLE_CHOICE exercise for contextual usage
+
+For each exercise provide:
+- type: 'MULTIPLE_CHOICE' | 'FILL_BLANK' | 'MATCHING'
+- question: English question/prompt
+- questionVi: Vietnamese translation of the question
+- options: Array of answer choices (for FILL_BLANK, can be empty array)
+- correctAnswer: The correct answer
+- explanation: Brief explanation of why this is correct
+
+Make exercises:
+- Appropriate for ${level} level learners
+- Contextual and practical
+- Testing different aspects of understanding (definition, usage, context)
+
+Return ONLY a valid JSON array with this exact structure:
+[
+  {
+    "type": "MULTIPLE_CHOICE",
+    "question": "What does 'regarding' mean?",
+    "questionVi": "'Regarding' có nghĩa là gì?",
+    "options": ["about", "after", "before", "during"],
+    "correctAnswer": "about",
+    "explanation": "'Regarding' means 'concerning' or 'about something'."
+  }
+]`,
+    },
+    {
+      role: "user",
+      content: `Generate 3 exercises for the word "${word}". Make them practical and appropriate for ${level} level learners.`,
+    },
+  ];
+
+  try {
+    const openrouter = new OpenRouter({
+      apiKey: apiKey,
+    });
+
+    const completion = await openrouter.chat.send({
+      model: "deepseek/deepseek-chat",
+      messages: messages as any,
+      temperature: 0.7,
+      maxTokens: 1500,
+      stream: false,
+    });
+
+    const messageContent = completion.choices[0]?.message?.content;
+
+    // Handle content that might be string or array
+    let content: string;
+    if (typeof messageContent === "string") {
+      content = messageContent;
+    } else if (Array.isArray(messageContent)) {
+      content = messageContent
+        .filter((item: any) => item.type === "text")
+        .map((item: any) => item.text)
+        .join("");
+    } else {
+      throw new Error("No content received from OpenRouter API");
+    }
+
+    if (!content) {
+      throw new Error("No content received from OpenRouter API");
+    }
+
+    // Extract JSON from the response
+    const jsonMatch = content.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error("Could not parse JSON from OpenRouter response");
+    }
+
+    const exercises: GeneratedExercise[] = JSON.parse(jsonMatch[0]);
+
+    // Validate and ensure we have at least 3 exercises
+    if (!Array.isArray(exercises) || exercises.length === 0) {
+      throw new Error("No exercises generated");
+    }
+
+    return exercises.slice(0, 3); // Return only first 3
+  } catch (error) {
+    console.error("OpenRouter API error for exercises:", error);
+    throw error;
+  }
+}

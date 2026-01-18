@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Check, X, ChevronRight, PartyPopper } from 'lucide-react';
-import { Card, CardContent } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Alert, AlertDescription } from '@/app/components/ui/alert';
-import { cn } from '@/app/lib/utils';
+import { useState } from "react";
+import { Check, X, ChevronRight, PartyPopper } from "lucide-react";
+import { Card, CardContent } from "@/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Alert, AlertDescription } from "@/app/components/ui/alert";
+import { cn } from "@/app/lib/utils";
 
 interface Exercise {
   id: string;
@@ -24,11 +24,33 @@ interface ExerciseSectionProps {
   userId: string;
 }
 
-export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionProps) {
+export function ExerciseSection({
+  exercises,
+  wordId,
+  userId,
+}: ExerciseSectionProps) {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+
+  // Guard clause for empty or undefined exercises
+  if (!exercises || exercises.length === 0) {
+    return (
+      <div className="mt-8 border-t pt-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold">Practice Exercises</h2>
+        </div>
+        <Card>
+          <CardContent className="p-6 text-center">
+            <p className="text-muted-foreground">
+              No exercises available for this word yet.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const currentExercise = exercises[currentExerciseIndex];
   const isCorrect = selectedAnswer === currentExercise.correctAnswer;
@@ -40,42 +62,38 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
 
   const handleSubmit = async () => {
     if (!selectedAnswer) return;
-    
+
     setShowResult(true);
     const correct = selectedAnswer === currentExercise.correctAnswer;
-    
+
     // Update score
-    setScore(prev => ({
+    setScore((prev) => ({
       correct: correct ? prev.correct + 1 : prev.correct,
       total: prev.total + 1,
     }));
 
     // Send to API to update progress
     try {
-      await fetch('/api/progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch("/api/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           vocabularyId: wordId,
           isCorrect: correct,
         }),
       });
     } catch (error) {
-      console.error('Failed to update progress:', error);
+      console.error("Failed to update progress:", error);
     }
   };
 
   const handleNext = () => {
     if (currentExerciseIndex < exercises.length - 1) {
-      setCurrentExerciseIndex(prev => prev + 1);
+      setCurrentExerciseIndex((prev) => prev + 1);
       setSelectedAnswer(null);
       setShowResult(false);
     }
   };
-
-  if (exercises.length === 0) {
-    return null;
-  }
 
   return (
     <div className="mt-8 border-t pt-8">
@@ -96,19 +114,24 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
         <CardContent className="p-6">
           {/* Question */}
           <div className="mb-6">
-            <p className="text-lg font-medium mb-2">{currentExercise.question}</p>
+            <p className="text-lg font-medium mb-2">
+              {currentExercise.question}
+            </p>
             {currentExercise.questionVi && (
-              <p className="text-sm text-muted-foreground">{currentExercise.questionVi}</p>
+              <p className="text-sm text-muted-foreground">
+                {currentExercise.questionVi}
+              </p>
             )}
           </div>
 
           {/* Multiple Choice Options */}
-          {currentExercise.type === 'MULTIPLE_CHOICE' && (
+          {currentExercise.type === "MULTIPLE_CHOICE" && (
             <div className="space-y-3 mb-6">
               {currentExercise.options.map((option, index) => {
                 const isSelected = selectedAnswer === option;
-                const isCorrectAnswer = option === currentExercise.correctAnswer;
-                
+                const isCorrectAnswer =
+                  option === currentExercise.correctAnswer;
+
                 return (
                   <Button
                     key={index}
@@ -116,11 +139,21 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
                     disabled={showResult}
                     variant="outline"
                     className={cn(
-                      'w-full justify-start h-auto p-4 text-left',
-                      showResult && isCorrectAnswer && 'border-green-500 bg-green-500/10 text-green-700 dark:text-green-400',
-                      showResult && isSelected && !isCorrectAnswer && 'border-destructive bg-destructive/10 text-destructive',
-                      showResult && !isCorrectAnswer && !isSelected && 'opacity-50',
-                      !showResult && isSelected && 'border-primary bg-primary/10'
+                      "w-full justify-start h-auto p-4 text-left",
+                      showResult &&
+                        isCorrectAnswer &&
+                        "border-green-500 bg-green-500/10 text-green-700 dark:text-green-400",
+                      showResult &&
+                        isSelected &&
+                        !isCorrectAnswer &&
+                        "border-destructive bg-destructive/10 text-destructive",
+                      showResult &&
+                        !isCorrectAnswer &&
+                        !isSelected &&
+                        "opacity-50",
+                      !showResult &&
+                        isSelected &&
+                        "border-primary bg-primary/10"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -139,11 +172,11 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
           )}
 
           {/* Fill in the Blank */}
-          {currentExercise.type === 'FILL_BLANK' && (
+          {currentExercise.type === "FILL_BLANK" && (
             <div className="mb-6">
               <Input
                 type="text"
-                value={selectedAnswer || ''}
+                value={selectedAnswer || ""}
                 onChange={(e) => setSelectedAnswer(e.target.value)}
                 disabled={showResult}
                 placeholder="Type your answer..."
@@ -153,7 +186,10 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
 
           {/* Result Message */}
           {showResult && (
-            <Alert variant={isCorrect ? 'default' : 'destructive'} className="mb-6">
+            <Alert
+              variant={isCorrect ? "default" : "destructive"}
+              className="mb-6"
+            >
               <div className="flex items-center gap-2 mb-2">
                 {isCorrect ? (
                   <>
@@ -169,11 +205,14 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
                 )}
               </div>
               {currentExercise.explanation && (
-                <AlertDescription>{currentExercise.explanation}</AlertDescription>
+                <AlertDescription>
+                  {currentExercise.explanation}
+                </AlertDescription>
               )}
               {!isCorrect && (
                 <AlertDescription className="mt-2">
-                  Correct answer: <strong>{currentExercise.correctAnswer}</strong>
+                  Correct answer:{" "}
+                  <strong>{currentExercise.correctAnswer}</strong>
                 </AlertDescription>
               )}
             </Alert>
@@ -192,10 +231,7 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
             ) : (
               <>
                 {currentExerciseIndex < exercises.length - 1 ? (
-                  <Button
-                    onClick={handleNext}
-                    className="flex-1"
-                  >
+                  <Button onClick={handleNext} className="flex-1">
                     Next Question
                     <ChevronRight className="w-5 h-5 ml-2" />
                   </Button>
@@ -210,9 +246,7 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
                         <p className="text-sm mb-3">
                           You scored {score.correct} out of {score.total}
                         </p>
-                        <Button
-                          onClick={() => window.location.href = '/'}
-                        >
+                        <Button onClick={() => (window.location.href = "/")}>
                           Back to Home
                         </Button>
                       </AlertDescription>
@@ -231,7 +265,11 @@ export function ExerciseSection({ exercises, wordId, userId }: ExerciseSectionPr
           <div
             className="bg-primary h-2 rounded-full transition-all duration-300"
             style={{
-              width: `${((currentExerciseIndex + (showResult ? 1 : 0)) / exercises.length) * 100}%`,
+              width: `${
+                ((currentExerciseIndex + (showResult ? 1 : 0)) /
+                  exercises.length) *
+                100
+              }%`,
             }}
           />
         </div>
